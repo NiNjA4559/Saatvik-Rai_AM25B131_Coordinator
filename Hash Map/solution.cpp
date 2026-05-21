@@ -210,6 +210,73 @@ void LinkedList<KeyType, ValueType>::clear() {
     return;
 }
 
+template <typename KeyType, typename ValueType>
+ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) {
+    
+    Node *curr = head;
+    while(curr != nullptr) {
+        if(key == curr->key) {
+            return curr->value;
+        }
+        curr = curr->next;
+    }
+
+    throw std::out_of_range("Key not found");
+
+}
+
+template <typename KeyType, typename ValueType>
+const ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) const {
+    
+    Node *curr = head;
+    while(curr != nullptr) {
+        if(key == curr->key) {
+            return curr->value;
+        }
+        curr = curr->next;
+    }
+
+    throw std::out_of_range("Key not found");
+}
+
+template <typename KeyType, typename ValueType>
+ValueType *LinkedList<KeyType, ValueType>::find(const KeyType &key) {
+    
+    Node *curr = head;
+    while(curr != nullptr) {
+        if(key == curr->key) {
+            return &(curr->value);
+        }
+        curr = curr->next;
+    }
+
+    return nullptr;
+
+}
+
+template <typename KeyType, typename ValueType>
+bool LinkedList<KeyType, ValueType>::contains(const KeyType &key) const {
+    
+    Node *curr = head;
+    while(curr != nullptr) {
+        if(key == curr->key) {
+            return true;
+        }
+        curr = curr->next;
+    }
+
+    return false;
+
+}
+
+template <typename KeyType, typename ValueType>
+size_t LinkedList<KeyType, ValueType>::size() const {
+    
+    return n;
+
+}
+
+
 // ---------- UnComment the macros as you go on, this allows for partial submissions ----------///
 #define TEST_CASE_1
 // #define TEST_CASE_2
