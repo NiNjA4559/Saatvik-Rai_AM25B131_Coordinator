@@ -158,6 +158,76 @@ LinkedList<KeyType, ValueType>::~LinkedList() {
 }
 
 template <typename KeyType, typename ValueType>
+LinkedList<KeyType, ValueType>::LinkedList(const LinkedList &other) {
+
+    *this = other;
+
+};
+
+template <typename KeyType, typename ValueType>
+LinkedList<KeyType, ValueType>::LinkedList(LinkedList &&other) noexcept {
+    head = other.head;
+    n = other.n;
+
+    other.head = nullptr;
+    other.n = 0;
+};
+
+template <typename KeyType, typename ValueType>
+LinkedList<KeyType, ValueType>& LinkedList<KeyType, ValueType>::operator=(const LinkedList<KeyType, ValueType> &other) {
+    
+    if(this == &other) {
+        return *this;
+    }
+
+    clear();
+
+    Node *curr = other.head;
+    Node *tail = nullptr;
+
+    while(curr != nullptr) {
+        Node *newNode = new Node;
+
+        newNode->key = curr->key;
+        newNode->value = curr->value;
+        newNode->next = nullptr;
+
+        if(head == nullptr) {
+            head = newNode;
+        } else {
+            tail->next = newNode;
+        }
+
+        tail = newNode;
+        curr = curr->next;
+    }
+    n = other.n;
+
+    return *this;
+
+};
+//LinkedList &operator=(LinkedList &&other) noexcept;
+template <typename KeyType, typename ValueType>
+LinkedList<KeyType, ValueType>& LinkedList<KeyType, ValueType>::operator=(LinkedList<KeyType, ValueType> &&other) noexcept {
+
+    if(this == &other) {
+        return *this;
+    }
+
+    clear();
+
+    head = other.head;
+    n = other.n;
+
+    other.head = nullptr;
+    other.n = 0;
+
+    return *this;
+
+}
+
+
+template <typename KeyType, typename ValueType>
 void LinkedList<KeyType, ValueType>::insert(const KeyType &key, const ValueType &value) {
     
     Node *curr = head;
@@ -169,7 +239,10 @@ void LinkedList<KeyType, ValueType>::insert(const KeyType &key, const ValueType 
         curr = curr->next;
     }
 
-    Node *newNode = new Node{key, value, head};
+    Node *newNode = new Node;
+    newNode->key = key;
+    newNode->value = value;
+    newNode->next = head;
     head = newNode;
     n++;
     return;
@@ -277,6 +350,50 @@ size_t LinkedList<KeyType, ValueType>::size() const {
 
 }
 
+template <typename KeyType, typename ValueType>
+bool LinkedList<KeyType, ValueType>::operator==(const LinkedList &other) const {
+    
+    if(n != other.n) return false;
+
+    Node *curr = head;
+
+    while(curr != nullptr) {
+        try {
+            if(curr->value != other.at(curr->key)) {
+                return false;
+            }
+        } catch(...) {
+            return false;
+        }
+
+        curr = curr->next;
+    }
+
+    return true;
+};
+
+template <typename KeyType, typename ValueType>
+bool LinkedList<KeyType, ValueType>::operator!=(const LinkedList &other) const {
+    
+    if(n != other.n) return true;
+
+    Node *curr = head;
+
+    while(curr != nullptr) {
+        try {
+            if(curr->value != other.at(curr->key)) {
+                return true;
+            }
+        } catch(...) {
+            return true;
+        }
+
+        curr = curr->next;
+    }
+
+    return false;
+};
+
 
 // ---------- UnComment the macros as you go on, this allows for partial submissions ----------///
 #define TEST_CASE_1
@@ -285,9 +402,9 @@ size_t LinkedList<KeyType, ValueType>::size() const {
 #define TEST_CASE_4
 #define TEST_CASE_5
 #define TEST_CASE_6
-// #define TEST_CASE_7
-// #define TEST_CASE_8
-// #define TEST_CASE_9
+#define TEST_CASE_7
+#define TEST_CASE_8
+#define TEST_CASE_9
 // #define TEST_CASE_10
 // #define TEST_CASE_11
 // #define TEST_CASE_12
