@@ -280,11 +280,11 @@ size_t LinkedList<KeyType, ValueType>::size() const {
 
 // ---------- UnComment the macros as you go on, this allows for partial submissions ----------///
 #define TEST_CASE_1
-// #define TEST_CASE_2
-// #define TEST_CASE_3
-// #define TEST_CASE_4
-// #define TEST_CASE_5
-// #define TEST_CASE_6
+#define TEST_CASE_2
+#define TEST_CASE_3
+#define TEST_CASE_4
+#define TEST_CASE_5
+#define TEST_CASE_6
 // #define TEST_CASE_7
 // #define TEST_CASE_8
 // #define TEST_CASE_9
