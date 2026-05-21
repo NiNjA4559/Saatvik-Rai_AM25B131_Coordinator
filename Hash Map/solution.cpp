@@ -148,10 +148,70 @@ public:
 ///---------------------- DO NOT TOUCH/MODIFY ABOVE THIS LINE, IT'S FOR YOUR REFERENCE ----------------------///
 ///------------------ IF YOU DO SO THE CURSE OF KING MIDUS WILL TURN IT INTO BROKEN CODE :P------------------///
 
+template <typename KeyType, typename ValueType>
+LinkedList<KeyType, ValueType>::LinkedList() {
+}
 
+template <typename KeyType, typename ValueType>
+LinkedList<KeyType, ValueType>::~LinkedList() {
+    clear();
+}
+
+template <typename KeyType, typename ValueType>
+void LinkedList<KeyType, ValueType>::insert(const KeyType &key, const ValueType &value) {
+    
+    Node *curr = head;
+    while(curr != nullptr) {
+        if(key == curr->key) {
+            curr->value = value;
+            return;
+        }
+        curr = curr->next;
+    }
+
+    Node *newNode = new Node{key, value, head};
+    head = newNode;
+    n++;
+    return;
+
+}
+
+template <typename KeyType, typename ValueType>
+void LinkedList<KeyType, ValueType>::erase(const KeyType &key) {
+    
+    Node *curr = head;
+    Node *parent = nullptr;
+    while(curr != nullptr) {
+        if(key == curr->key) {
+            if(parent == nullptr) {
+                head = curr->next;
+            } else {
+                parent->next = curr->next;
+            }
+            delete curr;
+            n--;
+            return;
+        }
+        parent = curr;
+        curr = curr->next;
+    }
+    return;
+}
+
+template <typename KeyType, typename ValueType>
+void LinkedList<KeyType, ValueType>::clear() {
+    
+    Node *curr = head;
+    while(curr != nullptr) {
+        Node *nextNode = curr->next;
+        delete curr;
+        curr = nextNode;
+    }
+    return;
+}
 
 // ---------- UnComment the macros as you go on, this allows for partial submissions ----------///
-// #define TEST_CASE_1
+#define TEST_CASE_1
 // #define TEST_CASE_2
 // #define TEST_CASE_3
 // #define TEST_CASE_4
