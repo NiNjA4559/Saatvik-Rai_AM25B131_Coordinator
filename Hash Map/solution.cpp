@@ -232,10 +232,7 @@ void LinkedList<KeyType, ValueType>::insert(const KeyType &key, const ValueType 
     
     Node *curr = head;
     while(curr != nullptr) {
-        if(key == curr->key) {
-            curr->value = value;
-            return;
-        }
+        if(key == curr->key) return;
         curr = curr->next;
     }
 
