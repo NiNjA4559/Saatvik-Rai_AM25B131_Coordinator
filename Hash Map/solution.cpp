@@ -207,7 +207,8 @@ void LinkedList<KeyType, ValueType>::clear() {
         delete curr;
         curr = nextNode;
     }
-    return;
+    head = nullptr;
+    n = 0;
 }
 
 template <typename KeyType, typename ValueType>
