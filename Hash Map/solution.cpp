@@ -148,15 +148,25 @@ public:
 ///---------------------- DO NOT TOUCH/MODIFY ABOVE THIS LINE, IT'S FOR YOUR REFERENCE ----------------------///
 ///------------------ IF YOU DO SO THE CURSE OF KING MIDUS WILL TURN IT INTO BROKEN CODE :P------------------///
 
+/*-----------LINKED LIST FUNCTIONS AND OPERATORS IMPLEMENTATIONS-----------*/
+
+// Constructor
 template <typename KeyType, typename ValueType>
 LinkedList<KeyType, ValueType>::LinkedList() {
+
+    //Nothing required here
+
 }
 
+// Destructor
 template <typename KeyType, typename ValueType>
 LinkedList<KeyType, ValueType>::~LinkedList() {
+
     clear();
+
 }
 
+// Copy constructor
 template <typename KeyType, typename ValueType>
 LinkedList<KeyType, ValueType>::LinkedList(const LinkedList &other) {
 
@@ -164,28 +174,38 @@ LinkedList<KeyType, ValueType>::LinkedList(const LinkedList &other) {
 
 };
 
+// Move constructor
 template <typename KeyType, typename ValueType>
 LinkedList<KeyType, ValueType>::LinkedList(LinkedList &&other) noexcept {
+
     head = other.head;
     n = other.n;
 
     other.head = nullptr;
     other.n = 0;
+
 };
 
+// Copy assignment operator
 template <typename KeyType, typename ValueType>
 LinkedList<KeyType, ValueType>& LinkedList<KeyType, ValueType>::operator=(const LinkedList<KeyType, ValueType> &other) {
-    
+
+    // If the target list is passed as the argument, return
     if(this == &other) {
+
         return *this;
+
     }
 
+    // Clear the target Linked List
     clear();
 
     Node *curr = other.head;
     Node *tail = nullptr;
 
+    // Create a new node for each existing node
     while(curr != nullptr) {
+
         Node *newNode = new Node;
 
         newNode->key = curr->key;
@@ -193,29 +213,42 @@ LinkedList<KeyType, ValueType>& LinkedList<KeyType, ValueType>::operator=(const 
         newNode->next = nullptr;
 
         if(head == nullptr) {
+
             head = newNode;
+
         } else {
+
             tail->next = newNode;
+
         }
 
         tail = newNode;
         curr = curr->next;
+
     }
+
+    // Set the size of the new Linked List
     n = other.n;
 
     return *this;
 
 };
-//LinkedList &operator=(LinkedList &&other) noexcept;
+
+// Move assignment operator
 template <typename KeyType, typename ValueType>
 LinkedList<KeyType, ValueType>& LinkedList<KeyType, ValueType>::operator=(LinkedList<KeyType, ValueType> &&other) noexcept {
 
+    // If the target list is passed as the argument, return
     if(this == &other) {
+
         return *this;
+
     }
 
+    // Clear the target Linked List
     clear();
 
+    // Transfer ownership to the new Linked List
     head = other.head;
     n = other.n;
 
@@ -231,18 +264,19 @@ template <typename KeyType, typename ValueType>
 void LinkedList<KeyType, ValueType>::insert(const KeyType &key, const ValueType &value) {
     
     Node *curr = head;
+
+    // If key already exists, return
     while(curr != nullptr) {
+
         if(key == curr->key) return;
         curr = curr->next;
+
     }
 
-    Node *newNode = new Node;
-    newNode->key = key;
-    newNode->value = value;
-    newNode->next = head;
+    // Create and insert the node
+    Node *newNode = new Node{key, value, head};
     head = newNode;
     n++;
-    return;
 
 }
 
@@ -251,45 +285,76 @@ void LinkedList<KeyType, ValueType>::erase(const KeyType &key) {
     
     Node *curr = head;
     Node *parent = nullptr;
+
     while(curr != nullptr) {
+
         if(key == curr->key) {
+
             if(parent == nullptr) {
+
+                // If the target node is the head, change the head to its child node
                 head = curr->next;
+
             } else {
+
+                // Else, change the target's parent's child to target's child
                 parent->next = curr->next;
+
             }
+
             delete curr;
             n--;
             return;
+
         }
+
         parent = curr;
         curr = curr->next;
+
     }
-    return;
+
 }
 
 template <typename KeyType, typename ValueType>
 void LinkedList<KeyType, ValueType>::clear() {
     
     Node *curr = head;
+
+    // Clear each node from memory, one by one
     while(curr != nullptr) {
+
         Node *nextNode = curr->next;
         delete curr;
         curr = nextNode;
+
     }
+
     head = nullptr;
     n = 0;
+
 }
+
+// EXISTENCE CHECKERS/FIND FUNCTIONS - at, find, contains
+// All three work on the same logic, but return different datatypes.
+
+// The at function has two variations, for const and non const return types.
+// A non const return value can be changed using an assignment operator.
 
 template <typename KeyType, typename ValueType>
 ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) {
     
     Node *curr = head;
+
     while(curr != nullptr) {
+
         if(key == curr->key) {
+
             return curr->value;
+
         }
+
         curr = curr->next;
+
     }
 
     throw std::out_of_range("Key not found");
@@ -300,25 +365,38 @@ template <typename KeyType, typename ValueType>
 const ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) const {
     
     Node *curr = head;
+
     while(curr != nullptr) {
+
         if(key == curr->key) {
+
             return curr->value;
+
         }
+
         curr = curr->next;
+
     }
 
     throw std::out_of_range("Key not found");
+
 }
 
 template <typename KeyType, typename ValueType>
 ValueType *LinkedList<KeyType, ValueType>::find(const KeyType &key) {
     
     Node *curr = head;
+
     while(curr != nullptr) {
+
         if(key == curr->key) {
+
             return &(curr->value);
+
         }
+
         curr = curr->next;
+
     }
 
     return nullptr;
@@ -329,16 +407,23 @@ template <typename KeyType, typename ValueType>
 bool LinkedList<KeyType, ValueType>::contains(const KeyType &key) const {
     
     Node *curr = head;
+
     while(curr != nullptr) {
+
         if(key == curr->key) {
+
             return true;
+
         }
+
         curr = curr->next;
+
     }
 
     return false;
 
 }
+
 
 template <typename KeyType, typename ValueType>
 size_t LinkedList<KeyType, ValueType>::size() const {
@@ -347,6 +432,7 @@ size_t LinkedList<KeyType, ValueType>::size() const {
 
 }
 
+// EQUALITY OPERATORS - ==, !=
 template <typename KeyType, typename ValueType>
 bool LinkedList<KeyType, ValueType>::operator==(const LinkedList &other) const {
     
@@ -354,19 +440,29 @@ bool LinkedList<KeyType, ValueType>::operator==(const LinkedList &other) const {
 
     Node *curr = head;
 
+    // If any of the values mismatch/key doesn't exist, return false
     while(curr != nullptr) {
+
         try {
+
             if(curr->value != other.at(curr->key)) {
+
                 return false;
+
             }
+
         } catch(...) {
+
             return false;
+
         }
 
         curr = curr->next;
+
     }
 
     return true;
+
 };
 
 template <typename KeyType, typename ValueType>
@@ -376,19 +472,29 @@ bool LinkedList<KeyType, ValueType>::operator!=(const LinkedList &other) const {
 
     Node *curr = head;
 
+    // If any of the values mismatch/key doesn't exist, return true
     while(curr != nullptr) {
+
         try {
+
             if(curr->value != other.at(curr->key)) {
+
                 return true;
+
             }
+
         } catch(...) {
+
             return true;
+
         }
 
         curr = curr->next;
+        
     }
 
     return false;
+
 };
 
 
