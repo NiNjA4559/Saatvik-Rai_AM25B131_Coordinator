@@ -148,7 +148,7 @@ public:
 ///---------------------- DO NOT TOUCH/MODIFY ABOVE THIS LINE, IT'S FOR YOUR REFERENCE ----------------------///
 ///------------------ IF YOU DO SO THE CURSE OF KING MIDUS WILL TURN IT INTO BROKEN CODE :P------------------///
 
-/*-----------LINKED LIST FUNCTIONS AND OPERATORS IMPLEMENTATIONS-----------*/
+///-----------LINKED LIST FUNCTIONS AND OPERATORS IMPLEMENTATIONS-----------///
 
 // Constructor
 template <typename KeyType, typename ValueType>
@@ -490,12 +490,42 @@ bool LinkedList<KeyType, ValueType>::operator!=(const LinkedList &other) const {
         }
 
         curr = curr->next;
-        
+
     }
 
     return false;
 
 };
+
+
+///-----------HASH FUNCTOR IMPLEMENTATIONS-----------///
+
+// Generic template fallback (works for int, char, etc.)
+template <typename T>
+size_t HashFunctor<T>::operator()(T Key) const {
+    return static_cast<size_t>(Key);
+}
+
+// Specialization for std::string (djb2 hash algorithm)
+template <>
+size_t HashFunctor<std::string>::operator()(std::string Key) const {
+    size_t hash = 5381;
+    for (char c : Key) {
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
+    return hash;
+}
+
+// Specialization for float (using union for bit-level casting)
+template <>
+size_t HashFunctor<float>::operator()(float Key) const {
+    union {
+        float f;
+        unsigned int i;
+    } converter;
+    converter.f = Key;
+    return static_cast<size_t>(converter.i);
+}
 
 
 // ---------- UnComment the macros as you go on, this allows for partial submissions ----------///
