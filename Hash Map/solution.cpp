@@ -746,17 +746,17 @@ bool HashMap<N, KeyType, ValueType, HashFunc>::operator!=(const HashMap &other) 
 #define TEST_CASE_7
 #define TEST_CASE_8
 #define TEST_CASE_9
-// #define TEST_CASE_10
-// #define TEST_CASE_11
-// #define TEST_CASE_12
-// #define TEST_CASE_13
-// #define TEST_CASE_14
-// #define TEST_CASE_15
-// #define TEST_CASE_16
-// #define TEST_CASE_17
-// #define TEST_CASE_18
-// #define TEST_CASE_19
-// #define TEST_CASE_20
+#define TEST_CASE_10
+#define TEST_CASE_11
+#define TEST_CASE_12
+#define TEST_CASE_13
+#define TEST_CASE_14
+#define TEST_CASE_15
+#define TEST_CASE_16
+#define TEST_CASE_17
+#define TEST_CASE_18
+#define TEST_CASE_19
+#define TEST_CASE_20
 
 ///---------------------- DO NOT TOUCH/MODIFY BELOW THIS LINE, IT'S FOR HACKERRANK TESTING ----------------------///
 ///------------------ IF YOU DO SO THE CURSE OF KING MIDUS WILL TURN IT INTO BROKEN CODE :P------------------///
