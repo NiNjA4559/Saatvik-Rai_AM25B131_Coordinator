@@ -148,7 +148,7 @@ public:
 ///---------------------- DO NOT TOUCH/MODIFY ABOVE THIS LINE, IT'S FOR YOUR REFERENCE ----------------------///
 ///------------------ IF YOU DO SO THE CURSE OF KING MIDUS WILL TURN IT INTO BROKEN CODE :P------------------///
 
-///-----------LINKED LIST FUNCTIONS AND OPERATORS IMPLEMENTATIONS-----------///
+///-----------LINKED LIST IMPLEMENTATIONS-----------///
 
 // Constructor
 template <typename KeyType, typename ValueType>
@@ -259,7 +259,7 @@ LinkedList<KeyType, ValueType>& LinkedList<KeyType, ValueType>::operator=(Linked
 
 }
 
-
+// Insert
 template <typename KeyType, typename ValueType>
 void LinkedList<KeyType, ValueType>::insert(const KeyType &key, const ValueType &value) {
     
@@ -280,6 +280,7 @@ void LinkedList<KeyType, ValueType>::insert(const KeyType &key, const ValueType 
 
 }
 
+// Erase
 template <typename KeyType, typename ValueType>
 void LinkedList<KeyType, ValueType>::erase(const KeyType &key) {
     
@@ -315,6 +316,7 @@ void LinkedList<KeyType, ValueType>::erase(const KeyType &key) {
 
 }
 
+// Clear
 template <typename KeyType, typename ValueType>
 void LinkedList<KeyType, ValueType>::clear() {
     
@@ -334,12 +336,7 @@ void LinkedList<KeyType, ValueType>::clear() {
 
 }
 
-// EXISTENCE CHECKERS/FIND FUNCTIONS - at, find, contains
-// All three work on the same logic, but return different datatypes.
-
-// The at function has two variations, for const and non const return types.
-// A non const return value can be changed using an assignment operator.
-
+// Accessing elements of a non-const LinkedList object
 template <typename KeyType, typename ValueType>
 ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) {
     
@@ -361,6 +358,7 @@ ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) {
 
 }
 
+// Accessing elements of a const LinkedList object
 template <typename KeyType, typename ValueType>
 const ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) const {
     
@@ -382,6 +380,7 @@ const ValueType &LinkedList<KeyType, ValueType>::at(const KeyType &key) const {
 
 }
 
+// Find
 template <typename KeyType, typename ValueType>
 ValueType *LinkedList<KeyType, ValueType>::find(const KeyType &key) {
     
@@ -403,6 +402,7 @@ ValueType *LinkedList<KeyType, ValueType>::find(const KeyType &key) {
 
 }
 
+// Contains
 template <typename KeyType, typename ValueType>
 bool LinkedList<KeyType, ValueType>::contains(const KeyType &key) const {
     
@@ -424,7 +424,7 @@ bool LinkedList<KeyType, ValueType>::contains(const KeyType &key) const {
 
 }
 
-
+// Size
 template <typename KeyType, typename ValueType>
 size_t LinkedList<KeyType, ValueType>::size() const {
     
@@ -432,7 +432,7 @@ size_t LinkedList<KeyType, ValueType>::size() const {
 
 }
 
-// EQUALITY OPERATORS - ==, !=
+// Equality operator (operator==)
 template <typename KeyType, typename ValueType>
 bool LinkedList<KeyType, ValueType>::operator==(const LinkedList &other) const {
     
@@ -465,6 +465,7 @@ bool LinkedList<KeyType, ValueType>::operator==(const LinkedList &other) const {
 
 };
 
+// Inequality operator (operator!=)
 template <typename KeyType, typename ValueType>
 bool LinkedList<KeyType, ValueType>::operator!=(const LinkedList &other) const {
     
@@ -498,7 +499,7 @@ bool LinkedList<KeyType, ValueType>::operator!=(const LinkedList &other) const {
 };
 
 
-///-----------HASH FUNCTOR IMPLEMENTATIONS-----------///
+///-----------HASH FUNCTOR IMPLEMENTATIONS----------///
 
 // Generic template fallback (works for int, char, etc.)
 template <typename T>
@@ -527,6 +528,213 @@ size_t HashFunctor<float>::operator()(float Key) const {
     return static_cast<size_t>(converter.i);
 }
 
+
+///------------HASH MAP IMPLEMENTATIONS-------------///
+
+// Constructor
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+HashMap<N, KeyType, ValueType, HashFunc>::HashMap() {
+
+}
+
+// Destructor
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+HashMap<N, KeyType, ValueType, HashFunc>::~HashMap() {
+    
+    clear();
+
+}
+
+// Copy assignment operator
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+HashMap<N, KeyType, ValueType, HashFunc>& HashMap<N, KeyType, ValueType, HashFunc>::operator=(const HashMap &other) {
+
+    if(this != &other) {
+
+        for(size_t i = 0; i < N; i++) {
+
+            this->buckets[i] = other.buckets[i];
+
+        }
+
+    }
+
+    return *this;
+
+}
+
+// Move assignment operator
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+HashMap<N, KeyType, ValueType, HashFunc>& HashMap<N, KeyType, ValueType, HashFunc>::operator=(HashMap &&other) noexcept {
+
+    if (this != &other) {
+
+        for (size_t i = 0; i < N; ++i) {
+
+            this->buckets[i] = std::move(other.buckets[i]);  // std::move onverts LValues to RValues
+
+        }
+
+    }
+
+    return *this;
+
+}
+
+// Insert
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+void HashMap<N, KeyType, ValueType, HashFunc>::insert(const KeyType &key, const ValueType &value) {
+
+    // Find the bucket ID
+    size_t idx = hash(key) % N;
+
+    // Insert the node in that bucket
+    buckets[idx].insert(key, value);
+
+}
+
+// Erase
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+void HashMap<N, KeyType, ValueType, HashFunc>::erase(const KeyType &key) {
+
+    // Find the bucket ID
+    size_t idx = hash(key) % N;
+
+    // Remove the node from that bucket
+    buckets[idx].erase(key);
+
+}
+
+// Clear
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+void HashMap<N, KeyType, ValueType, HashFunc>::clear() {
+
+    // Iterate through all the buckets and clear them one by one
+    for (size_t i = 0; i < N; ++i) {
+
+        buckets[i].clear();
+
+    }
+
+}
+
+// Accessing elements of a non-const HashMap object
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+ValueType &HashMap<N, KeyType, ValueType, HashFunc>::at(const KeyType &key) {
+
+    // Find the bucket ID
+    size_t idx = hash(key) % N;
+
+    // Use the existing at method defined for LinkedList
+    return buckets[idx].at(key);
+
+}
+
+// Accessing elements of a const HashMap object
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+const ValueType &HashMap<N, KeyType, ValueType, HashFunc>::at(const KeyType &key) const {
+
+    // Find the bucket ID
+    size_t idx = hash(key) % N;
+
+    // Use the existing at method defined for LinkedList
+    return buckets[idx].at(key);
+
+}
+
+// Subscript Operator (operator[])
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+ValueType &HashMap<N, KeyType, ValueType, HashFunc>::operator[](const KeyType &key) {
+
+    // Find the bucket ID
+    size_t idx = hash(key) % N;
+
+    // Find the pointer to the requested node in that bucket
+    ValueType* ptr = buckets[idx].find(key);
+
+    if (ptr == nullptr) {
+
+        // If pointer does not point to a valid memory address, insert a dummy RValue for that key in that bucket
+        buckets[idx].insert(key, ValueType());
+
+        // Here, find would be an O(1) operation as the required key is the head of the bucket
+        ptr = buckets[idx].find(key);
+
+    }
+
+    return *ptr;
+
+}
+
+// Contains
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+bool HashMap<N, KeyType, ValueType, HashFunc>::contains(const KeyType &key) const {
+
+    size_t idx = hash(key) % N;
+
+    return buckets[idx].contains(key);
+
+}
+
+// Empty
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+bool HashMap<N, KeyType, ValueType, HashFunc>::empty() const {
+
+    return size() == 0;
+
+}
+
+// Size
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+size_t HashMap<N, KeyType, ValueType, HashFunc>::size() const {
+
+    size_t total_size = 0;
+
+    // Iterate through all the buckets and find the cummulative size
+    for (size_t i = 0; i < N; ++i) {
+
+        total_size += buckets[i].size();
+
+    }
+
+    return total_size;
+}
+
+// Equality operator (operator==)
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+bool HashMap<N, KeyType, ValueType, HashFunc>::operator==(const HashMap &other) const {
+
+    for (size_t i = 0; i < N; ++i) {
+
+        if (buckets[i] != other.buckets[i]) {
+
+            return false;
+
+        }
+
+    }
+
+    return true;
+
+}
+
+// Inequality operator (operator!=)
+template <size_t N, typename KeyType, typename ValueType, typename HashFunc>
+bool HashMap<N, KeyType, ValueType, HashFunc>::operator!=(const HashMap &other) const {
+
+    for (size_t i = 0; i < N; ++i) {
+
+        if (buckets[i] != other.buckets[i]) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
 
 // ---------- UnComment the macros as you go on, this allows for partial submissions ----------///
 #define TEST_CASE_1
